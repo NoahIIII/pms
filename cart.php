@@ -110,13 +110,15 @@ if (!isset($_SESSION['auth'])) {
         </div>
     </div>
 
-
+            <?php
+if(!empty($cart)):
+             ?>
     <div class="text-center my-4">
         <form action="handelers/handle_order.php" method="POST">
             <button class="btn btn-lg btn-purple">Order Now <?='( '.$total.'$ )'.''?></button>
         </form>
     </div>
-
+<?php endif; ?>
     <?php if (!empty($_SESSION['suc'])) : ?>
         <div id="success-container" class="alert-container">
             <?php foreach ($_SESSION['suc'] as $suc) : ?>
@@ -125,6 +127,13 @@ if (!isset($_SESSION['auth'])) {
             <?php unset($_SESSION['suc']); ?>
         </div>
     <?php endif; ?>
+
+    <?php if(empty($cart)): ?>
+        <div class="card_alert">
+        <h1>Cart empty</h1>
+        <p>you don't have any products in your cart.</p>
+    </div>
+    <?php endif;?>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
