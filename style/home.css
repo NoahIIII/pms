@@ -186,18 +186,5 @@ a:hover img {
 
 .order-table tbody tr:hover {
     background-color: #9055A2;
-    color: #ffffff;}
-    .card_alert {
-        background-color: #9055A2;
-        color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        width: 300px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .card_alert h1 {
-        font-size: 24px;
-    }
+    color: #ffffff;
+}
