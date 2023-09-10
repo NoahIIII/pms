@@ -5,7 +5,7 @@ if (!isset($_SESSION['auth'])) {
     header('location:index.php');
 }
 ?>
-<?php $total=0; ?>
+<?php $total = 0; ?>
 <html lang="en">
 <?php include_once 'Data/DB.php'; ?>
 
@@ -22,22 +22,27 @@ if (!isset($_SESSION['auth'])) {
 
 <body style="background-color: #ffffff;">
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #6c5ce7;">
-    <?php if($_SESSION['auth']['role']=='admin'): ?>
-    <a href="dashboard.php">
-        <img src="icons/dashboard._whitepng.png" alt="dashboard icon" width="48" height="48">
-    </a>        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <?php if ($_SESSION['auth']['role'] == 'admin') : ?>
+            <a href="dashboard.php">
+                <img src="icons/dashboard._whitepng.png" alt="dashboard icon" width="48" height="48">
+            </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         <?php endif; ?>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                <a class="nav-link" href="home.php" style="color: #ffffff;">Home</a>
-              </li>
+                    <a class="nav-link" href="home.php" style="color: #ffffff;">Home</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="profile.php" style="color: #ffffff;">Profile</a>
+
                 <li class="nav-item">
+                    <a href="cart_old_orders.php">
+                        <img src="icons/history.png" alt="historyicon" width="38" height="38">
+                    </a>
+                <li class="nav-item">
+
                     <a class="nav-link" href="logout.php" style="color: #ffffff;">Logout</a>
                 </li>
             </ul>
@@ -45,11 +50,16 @@ if (!isset($_SESSION['auth'])) {
     </nav>
 
     <div class="jumbotron text-center" style="background-color: #6c5ce7; color: #ffffff;">
-        <h1 class="display-4"> <?=$_SESSION['auth']['name'];?>'s cart</h1>
+        <h1 class="display-4"> <?= $_SESSION['auth']['name']; ?>'s cart</h1>
+
         <p class="lead">Here, you can find all the products in your cart</p>
         <a href="home.php" class="btn btn-lg btn-purple">Shop Now</a>
+
+
     </div>
+
     <div class="container">
+
         <div class="row">
             <?php
             $db = new DB();
@@ -64,7 +74,7 @@ if (!isset($_SESSION['auth'])) {
 
             foreach ($products as $product => $value) {
                 foreach ($value as $inside) {
-                   
+
             ?>
                     <div class="col-md-4 mb-4">
                         <div class="card" style="background-color: #ffffff;">
@@ -72,7 +82,7 @@ if (!isset($_SESSION['auth'])) {
                             <div class="card-body">
                                 <h5 class="card-title"><?= $inside['name']; ?></h5>
                                 <p class="card-text"><?= $inside['category_name']; ?></p>
-                                <p class="card-text"><?= $inside['price'].'$'; ?></p>
+                                <p class="card-text"><?= $inside['price'] . '$'; ?></p>
                             </div>
                             <div class="card-footer">
                                 <div class="d-flex flex-column align-items-center">
@@ -81,12 +91,12 @@ if (!isset($_SESSION['auth'])) {
                                         <button type="submit" class="btn btn-danger mb-2">Delete</button>
                                     </form>
                                     <div class="quantity-controls">
-                                    <form action="actions/update_quantity.php" method="POST">
+                                        <form action="actions/update_quantity.php" method="POST">
                                             <input type="hidden" name="product_id" value="<?= $inside['id']; ?>">
                                             <input type="hidden" name="user_id" value="<?= $_SESSION['auth']['id']; ?>">
                                             <input type="hidden" name="action" value="-">
                                             <button type="submit" class="btn btn-secondary">-</button>
-                                            </form>
+                                        </form>
 
                                         <span class="quantity"><?= $db->GetColumn('quantity', 'cart', "user_id = $user_id AND product_id = {$inside['id']}"); ?></span>
                                         <form action="actions/update_quantity.php" method="POST">
@@ -102,43 +112,47 @@ if (!isset($_SESSION['auth'])) {
                         </div>
                     </div>
             <?php
-            $quantity=$db->GetColumn('quantity', 'cart', "user_id = $user_id AND product_id = {$inside['id']}");
-            $total=$total+$inside['price']*$quantity;
+                    $quantity = $db->GetColumn('quantity', 'cart', "user_id = $user_id AND product_id = {$inside['id']}");
+                    $total = $total + $inside['price'] * $quantity;
                 }
             }
             ?>
+
+
         </div>
+
     </div>
 
-            <?php
-if(!empty($cart)):
-             ?>
-    <div class="text-center my-4">
-        <form action="handelers/handle_order.php" method="POST">
-            <button class="btn btn-lg btn-purple">Order Now <?='( '.$total.'$ )'.''?></button>
-        </form>
-    </div>
-<?php endif; ?>
-    <?php if (!empty($_SESSION['suc'])) : ?>
-        <div id="success-container" class="alert-container">
-            <?php foreach ($_SESSION['suc'] as $suc) : ?>
-                <div class="alert alert-success text-center"><?= $suc; ?></div>
-            <?php endforeach; ?>
-            <?php unset($_SESSION['suc']); ?>
-        </div>
-    <?php endif; ?>
+    <?php
+    if (!empty($cart)) :
+    ?>
+        <div class="text-center my-4">
+            <form action="handelers/handle_order.php" method="POST">
+                <button class="btn btn-lg btn-purple">Order Now <?= '( ' . $total . '$ )' . '' ?></button>
+            </form>
 
-    <?php if(empty($cart)): ?>
-        <div class="card_alert">
-        <h1>Cart empty</h1>
-        <p>you don't have any products in your cart.</p>
-    </div>
-    <?php endif;?>
+        <?php endif; ?>
+
+        <?php if (!empty($_SESSION['suc'])) : ?>
+            <div id="success-container" class="alert-container">
+                <?php foreach ($_SESSION['suc'] as $suc) : ?>
+                    <div class="alert alert-success text-center"><?= $suc; ?></div>
+                <?php endforeach; ?>
+                <?php unset($_SESSION['suc']); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (empty($cart)) : ?>
+            <div class="card_alert">
+                <h1>Cart empty</h1>
+                <p>you don't have any products in your cart.</p>
+            </div>
+        <?php endif; ?>
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
