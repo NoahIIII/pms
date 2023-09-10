@@ -42,6 +42,13 @@ $orders=$db->GetAll('orders',"user_id = $id");
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="profile.php" style="color: #ffffff;">Profile</a>
+                     <?php if(!empty($orders)): ?>
+
+                <li class="nav-item">
+                    <a href="cart_old_orders.php">
+                        <img src="icons/history.png" alt="historyicon" width="38" height="38">
+                    </a>
+                    <?php endif; ?>
                 <li class="nav-item">
 
                     <a class="nav-link" href="logout.php" style="color: #ffffff;">Logout</a>
